@@ -440,9 +440,9 @@ function renderQuests(animateQuestId = null) {
                 <span class="material-icons text-base ${quest.completed ? 'text-green-500' : 'opacity-0 group-hover:opacity-50'}"}>check</span>
             </div>
             <div class="flex-1">
-                <div class="flex items-center justify-between">
-                    <p class="text-lg leading-none pt-1 ${quest.completed ? 'line-through opacity-50' : ''}">${escapeHtml(quest.title)}</p>
-                    <button class="delete-quest-btn opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity" data-id="${quest.id}">
+                <div class="flex items-start justify-between">
+                    <p class="text-lg leading-tight pt-1 break-words break-all mr-2 ${quest.completed ? 'line-through opacity-50' : ''}">${escapeHtml(quest.title)}</p>
+                    <button class="delete-quest-btn opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity flex-shrink-0 mt-1" data-id="${quest.id}">
                         <span class="material-icons text-sm">close</span>
                     </button>
                 </div>
@@ -517,11 +517,11 @@ function renderDistractions() {
 
     AppState.distractions.forEach(distraction => {
         const li = document.createElement('li');
-        li.className = 'group flex items-center gap-2';
+        li.className = 'group flex items-start gap-2'; // Changed to items-start for multiline support
         li.innerHTML = `
-            <span class="w-2 h-2 ${distraction.crossed ? 'bg-red-500' : 'bg-primary'} block"></span>
-            <span class="distraction-text flex-1 cursor-pointer hover:opacity-80 transition-opacity ${distraction.crossed ? 'line-through decoration-2 opacity-50' : ''}" data-id="${distraction.id}">${escapeHtml(distraction.text)}</span>
-            <button class="delete-distraction-btn opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity" data-id="${distraction.id}">
+            <span class="w-2 h-2 ${distraction.crossed ? 'bg-red-500' : 'bg-primary'} block flex-shrink-0 mt-2"></span>
+            <span class="distraction-text flex-1 cursor-pointer hover:opacity-80 transition-opacity break-words break-all ${distraction.crossed ? 'line-through decoration-2 opacity-50' : ''}" data-id="${distraction.id}">${escapeHtml(distraction.text)}</span>
+            <button class="delete-distraction-btn opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity flex-shrink-0 mt-1" data-id="${distraction.id}">
                 <span class="material-icons text-sm">close</span>
             </button>
         `;
