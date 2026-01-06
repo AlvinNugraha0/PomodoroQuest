@@ -9,7 +9,8 @@ const AppState = {
         isRunning: false,
         mode: 'focus', // 'focus' or 'rest'
         remainingSeconds: 25 * 60,
-        intervalId: null
+        intervalId: null,
+        endTime: null
     },
     settings: {
         focusDuration: 25,
@@ -113,14 +114,22 @@ function startTimer() {
     // Add pulsing animation
     elements.timerDisplay.classList.add('animate-pulse');
 
+    // Calculate end time based on current remaining seconds
+    const now = Date.now();
+    AppState.timer.endTime = now + (AppState.timer.remainingSeconds * 1000);
+
     AppState.timer.intervalId = setInterval(() => {
-        AppState.timer.remainingSeconds--;
+        const secondsLeft = Math.ceil((AppState.timer.endTime - Date.now()) / 1000);
+
+        // Prevent negative values if slightly delayed
+        AppState.timer.remainingSeconds = secondsLeft < 0 ? 0 : secondsLeft;
+
         updateTimerDisplay();
 
         if (AppState.timer.remainingSeconds <= 0) {
             timerComplete();
         }
-    }, 1000);
+    }, 200); // 200ms check for smoother updates and better responsiveness
 }
 
 function stopTimer() {
