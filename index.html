@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pomodoro Quest</title>
+
+    <!-- ==================== External Libraries ==================== -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <!-- ==================== Tailwind Configuration ==================== -->
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#D97706",
+                        "primary-hover": "#B45309",
+                        "retro-bg": "#2D1B2E",
+                        "retro-card": "#432C3A",
+                        "retro-border": "#C4A484",
+                        "retro-text": "#FFE4C4",
+                        "background-light": "#FDF6E3",
+                        "background-dark": "#1a120b",
+                    },
+                    fontFamily: {
+                        display: ['"Press Start 2P"', 'cursive'],
+                        mono: ['"VT323"', 'monospace'],
+                    },
+                    borderRadius: {
+                        DEFAULT: "4px",
+                        'none': '0px',
+                    },
+                    boxShadow: {
+                        'retro': '4px 4px 0px 0px rgba(0,0,0,0.5)',
+                        'retro-sm': '2px 2px 0px 0px rgba(0,0,0,0.5)',
+                        'retro-inset': 'inset 3px 3px 0px 0px rgba(0,0,0,0.4)',
+                    }
+                },
+            },
+        };
+    </script>
+
+    <!-- ==================== Custom Styles ==================== -->
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-mono min-h-screen transition-colors duration-300 relative overflow-x-hidden text-gray-800 dark:text-retro-text">
+
+    <!-- ==================== Visual Effects Overlay ==================== -->
+    <div class="fixed inset-0 crt-overlay z-50 opacity-20 pointer-events-none"></div>
+    <div class="fixed inset-0 z-0 opacity-10 dark:opacity-20 pointer-events-none"
+        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDVxs8T1UyZBgTGvrGHRq2Qf7pT4TeDtAuoCxqZT5vxoXb-Y8KPdkZhDAx7Hp8lIzuXkj7PdY_HlIlBhziJ2mi7x6uZjbVeNR42vH-RnwCrFDHMZKV0I20TYyGQTp-3-ktdFPebnbYOa9yB9KtcaHtt8laDcS_zBQJYfpRDfLrtBIbyMifGr4tRaJyX8ctgJNYirKLhEsY3FiD2XjUJANaJNwNshdOsokWq8SaDhcQunTG0IHSDb997o2PfXZUveaTFMXAwgJh3R1o');">
+    </div>
+
+    <!-- ==================== Main Content Container ==================== -->
+    <div class="relative z-10 max-w-6xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- ==================== Header Section ==================== -->
+        <header class="col-span-1 lg:col-span-12 text-center mb-8">
+            <h1
+                class="text-3xl md:text-5xl font-display text-primary uppercase tracking-widest drop-shadow-[4px_4px_0_rgba(0,0,0,0.8)]">
+                Pomodoro Quest
+            </h1>
+            <p class="text-lg md:text-xl mt-4 opacity-80">Level up your productivity!</p>
+        </header>
+
+        <!-- ==================== Left Sidebar: Distractions Panel ==================== -->
+        <div class="col-span-1 lg:col-span-3 order-3 lg:order-1">
+            <div class="bg-white dark:bg-retro-card border-4 border-gray-800 dark:border-retro-border p-4 shadow-retro">
+
+                <!-- Panel Header -->
+                <div
+                    class="flex items-center justify-between mb-4 border-b-4 border-gray-800 dark:border-retro-border pb-2">
+                    <h2 class="font-display text-xs md:text-sm text-gray-700 dark:text-primary">Distractions</h2>
+                    <span class="material-icons text-lg">videogame_asset_off</span>
+                </div>
+
+                <!-- Panel Subtitle -->
+                <p class="text-sm mb-4 italic opacity-70">"What distracts you?"</p>
+
+                <!-- Distraction List -->
+                <ul id="distraction-list" class="space-y-3 mb-4 text-lg">
+                    <!-- Distractions will be rendered dynamically by JavaScript -->
+                </ul>
+
+                <!-- Add Distraction Input -->
+                <div class="relative">
+                    <input id="distraction-input" type="text" placeholder="Add distraction..."
+                        class="w-full bg-gray-100 dark:bg-black/30 border-2 border-gray-400 dark:border-retro-border p-2 font-mono text-lg focus:outline-none focus:border-primary placeholder-gray-500 dark:placeholder-gray-400" />
+                    <button id="add-distraction-btn"
+                        class="absolute right-2 top-2 text-primary hover:text-primary-hover">
+                        <span class="material-icons">add_box</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== Center: Timer Panel ==================== -->
+        <div class="col-span-1 lg:col-span-6 order-1 lg:order-2">
+            <div
+                class="bg-stone-200 dark:bg-[#3E2723] border-[6px] border-stone-600 dark:border-[#5D4037] p-2 shadow-[8px_8px_0_0_rgba(0,0,0,0.5)] rounded-lg relative overflow-hidden">
+
+                <!-- Corner Decorations -->
+                <div class="absolute top-0 left-0 w-4 h-4 bg-stone-600 dark:bg-[#8D6E63] z-10"></div>
+                <div class="absolute top-0 right-0 w-4 h-4 bg-stone-600 dark:bg-[#8D6E63] z-10"></div>
+                <div class="absolute bottom-0 left-0 w-4 h-4 bg-stone-600 dark:bg-[#8D6E63] z-10"></div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 bg-stone-600 dark:bg-[#8D6E63] z-10"></div>
+
+                <!-- Timer Inner Container -->
+                <div
+                    class="bg-stone-100 dark:bg-[#281815] border-4 border-stone-400 dark:border-[#4E342E] p-6 flex flex-col items-center justify-center relative min-h-[400px]">
+
+                    <!-- Decorative Icons -->
+                    <div class="absolute top-4 left-4 opacity-20">
+                        <span class="material-icons text-4xl">fireplace</span>
+                    </div>
+                    <div class="absolute top-4 right-4 opacity-20">
+                        <span class="material-icons text-4xl">pets</span>
+                    </div>
+
+                    <!-- Duration Settings -->
+                    <div class="w-full flex justify-between gap-4 mb-8 px-4">
+
+                        <!-- Focus Duration Input -->
+                        <div class="flex flex-col items-center w-1/2">
+                            <label
+                                class="font-display text-xs text-gray-500 dark:text-stone-400 mb-2 uppercase">Focus</label>
+                            <div
+                                class="flex items-center bg-gray-200 dark:bg-black/40 border-2 border-gray-400 dark:border-stone-600 px-2 py-1 shadow-retro-inset w-full">
+                                <span class="material-icons text-sm mr-2 text-primary">timer</span>
+                                <input id="focus-input" type="number" value="25" min="1" max="120"
+                                    class="bg-transparent border-none w-full text-center font-display text-sm focus:ring-0 p-0 text-gray-800 dark:text-retro-text" />
+                                <span class="text-xs ml-1 opacity-50">min</span>
+                            </div>
+                        </div>
+
+                        <!-- Rest Duration Input -->
+                        <div class="flex flex-col items-center w-1/2">
+                            <label
+                                class="font-display text-xs text-gray-500 dark:text-stone-400 mb-2 uppercase">Rest</label>
+                            <div
+                                class="flex items-center bg-gray-200 dark:bg-black/40 border-2 border-gray-400 dark:border-stone-600 px-2 py-1 shadow-retro-inset w-full">
+                                <span class="material-icons text-sm mr-2 text-green-500">local_cafe</span>
+                                <input id="rest-input" type="number" value="5" min="1" max="60"
+                                    class="bg-transparent border-none w-full text-center font-display text-sm focus:ring-0 p-0 text-gray-800 dark:text-retro-text" />
+                                <span class="text-xs ml-1 opacity-50">min</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timer Display -->
+                    <div
+                        class="bg-gray-800 dark:bg-black border-4 border-gray-600 dark:border-stone-600 p-8 mb-8 shadow-retro-inset w-full text-center relative group cursor-pointer hover:border-primary transition-colors overflow-hidden">
+                        <div
+                            class="absolute inset-0 bg-green-900/10 pointer-events-none group-hover:bg-primary/5 transition-colors">
+                        </div>
+                        <h2 id="timer-display"
+                            class="text-5xl md:text-6xl font-display text-green-500 dark:text-primary tracking-wider drop-shadow-[0_0_10px_rgba(217,119,6,0.6)]">
+                            25:00
+                        </h2>
+                        <p id="timer-status" class="font-display text-xs text-green-700 dark:text-orange-900 mt-2">
+                            PRESS START TO BEGIN QUEST
+                        </p>
+                    </div>
+
+                    <!-- Control Buttons -->
+                    <div class="grid grid-cols-2 gap-4 w-full px-4 mb-6">
+                        <button id="start-work-btn"
+                            class="bg-primary hover:bg-primary-hover text-white border-b-4 border-r-4 border-orange-800 active:border-0 active:translate-y-1 active:ml-1 active:mt-1 py-4 px-6 font-display text-sm md:text-base flex items-center justify-center gap-3 transition-all">
+                            <span class="material-icons">construction</span>
+                            START WORK
+                        </button>
+                        <button id="rest-btn"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white border-b-4 border-r-4 border-emerald-900 active:border-0 active:translate-y-1 active:ml-1 active:mt-1 py-4 px-6 font-display text-sm md:text-base flex items-center justify-center gap-3 transition-all">
+                            <span class="material-icons">coffee</span>
+                            REST
+                        </button>
+                    </div>
+
+                    <!-- Reset Button -->
+                    <div class="w-full px-4">
+                        <button id="reset-btn"
+                            class="w-full bg-gray-500 hover:bg-gray-600 text-white border-b-4 border-r-4 border-gray-700 active:border-0 active:translate-y-1 active:ml-1 active:mt-1 py-2 px-4 font-display text-xs flex items-center justify-center gap-2 transition-all">
+                            <span class="material-icons text-sm">restart_alt</span>
+                            RESET SYSTEM
+                        </button>
+                    </div>
+
+                    <!-- Total Focus Stats -->
+                    <div
+                        class="mt-8 bg-stone-200 dark:bg-[#3E2723] px-6 py-2 border-2 border-dashed border-stone-400 dark:border-[#5D4037] rounded-full">
+                        <p class="font-mono text-xl text-stone-600 dark:text-retro-text">
+                            Total Focus: <span id="total-focus" class="text-primary font-bold">0</span> min
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== Right Sidebar: Quest Log Panel ==================== -->
+        <div class="col-span-1 lg:col-span-3 order-2 lg:order-3">
+            <div
+                class="bg-white dark:bg-retro-card border-4 border-gray-800 dark:border-retro-border p-4 shadow-retro h-full">
+
+                <!-- Panel Header -->
+                <div
+                    class="flex items-center justify-between mb-4 border-b-4 border-gray-800 dark:border-retro-border pb-2">
+                    <h2 class="font-display text-xs md:text-sm text-gray-700 dark:text-primary">Quest Log</h2>
+                    <span class="material-icons text-lg">assignment</span>
+                </div>
+
+                <!-- Panel Subtitle -->
+                <p class="text-sm mb-4 italic opacity-70">"To do list"</p>
+
+                <!-- Quest List -->
+                <ul id="quest-list" class="space-y-4 mb-4">
+                    <!-- Quests will be rendered dynamically by JavaScript -->
+                </ul>
+
+                <!-- Add Quest Input -->
+                <div class="relative mb-4">
+                    <input id="quest-input" type="text" placeholder="Add new quest..."
+                        class="w-full bg-gray-100 dark:bg-black/30 border-2 border-gray-400 dark:border-retro-border p-2 font-mono text-lg focus:outline-none focus:border-primary placeholder-gray-500 dark:placeholder-gray-400" />
+                    <button id="add-quest-btn" class="absolute right-2 top-2 text-primary hover:text-primary-hover">
+                        <span class="material-icons">add_box</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== Dark Mode Toggle Button ==================== -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button
+            class="bg-gray-800 dark:bg-retro-border text-white dark:text-retro-bg p-3 rounded-none shadow-retro hover:scale-105 transition-transform border-2 border-white dark:border-retro-bg"
+            onclick="document.documentElement.classList.toggle('dark')">
+            <span class="material-icons block dark:hidden">dark_mode</span>
+            <span class="material-icons hidden dark:block">light_mode</span>
+        </button>
+    </div>
+
+    <!-- ==================== Footer ==================== -->
+    <footer class="text-center py-6 mt-12 opacity-50 font-display text-xs">
+        <p>© 2026 Alviana Nugraha. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <!-- ==================== JavaScript ==================== -->
+    <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+/**
+ * Quest Pomodoro - Custom Styles
+ * Retro pixel art theme with CRT effects
+ */
+
+/* ==================== Scrollbar Styling ==================== */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2D1B2E;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #D97706;
+    border: 2px solid #2D1B2E;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #B45309;
+}
+
+/* ==================== Retro Pixel Border Effect ==================== */
+.pixel-border {
+    box-shadow:
+        -4px 0 0 0 #1a120b,
+        4px 0 0 0 #1a120b,
+        0 -4px 0 0 #1a120b,
+        0 4px 0 0 #1a120b;
+    margin: 4px;
+}
+
+/* ==================== CRT Monitor Overlay Effect ==================== */
+.crt-overlay {
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+}
+
+/* ==================== Quest Progress Bar Animation ==================== */
+@keyframes progressFill {
+    0% {
+        width: 0%;
+        background-color: #ef4444;
+        /* Red */
+    }
+
+    50% {
+        width: 50%;
+        background-color: #eab308;
+        /* Yellow */
+    }
+
+    100% {
+        width: 100%;
+        background-color: #22c55e;
+        /* Green */
+    }
+}
+
+.quest-progress-animate {
+    animation: progressFill 0.8s ease-out forwards;
+}
+
+.quest-progress-bar {
+    transition: width 0.3s ease-out, background-color 0.3s ease-out;
+}
